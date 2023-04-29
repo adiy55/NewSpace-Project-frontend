@@ -44,14 +44,4 @@ const Navigator = () => {
   return BottomNavigationTabs();
 };
 
-// const Navigator = () => {
-//   return (
-//     <NavigationContainer>
-//       <Stack.Navigator screenOptions={{ headerShown: true }}>
-//         <Stack.Screen name="Home" component={HomeScreen} />
-//       </Stack.Navigator>
-//     </NavigationContainer>
-//   );
-// };
-
 export default Navigator;
