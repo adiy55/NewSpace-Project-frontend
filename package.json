@@ -9,10 +9,12 @@
   },
   "dependencies": {
     "@expo/config-plugins": "^5.0.4",
+    "@expo/webpack-config": "^0.17.0",
     "@npmcli/fs": "^3.1.0",
     "@react-native-community/cli": "^11.2.0",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
+    "axios": "^1.4.0",
     "expo": "~46.0.21",
     "expo-image-picker": "~13.3.1",
     "expo-splash-screen": "~0.16.2",
@@ -29,8 +31,7 @@
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.10",
     "uuid": "^9.0.0",
-    "xml2js": "^0.5.0",
-    "@expo/webpack-config": "^0.17.0"
+    "xml2js": "^0.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
