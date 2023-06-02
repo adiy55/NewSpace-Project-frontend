@@ -1,89 +1,129 @@
 import React, { useContext, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, ScrollView, Image, SafeAreaView } from "react-native";
-import { screenStyles } from "../../styles";
+import { ScrollView, View, SafeAreaView } from "react-native";
+import { style } from "../../styles";
 import * as ImagePicker from "expo-image-picker";
-import { Button } from "react-native-paper";
+import {
+  Appbar,
+  Button,
+  Card,
+  Dialog,
+  Paragraph,
+  Portal,
+} from "react-native-paper";
 import { useFocusEffect } from "@react-navigation/native";
 import { AxiosContext } from "../../context/AxiosContext";
+import MilkyWay from "../../../assets/MilkyWay.jpg";
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const { publicAxios } = useContext(AxiosContext);
-  const [images, setImages] = useState([]);
+  const [image, setImage] = useState();
+  const [isVisible, setVisible] = useState(false);
+  useFocusEffect(React.useCallback(() => {}, []));
 
-  const selectImages = async () => {
+  // const cameraRollPermissions = Permissions.
+
+  const showDialog = () => setVisible(true);
+  const hideDialog = () => setVisible(false);
+
+  const selectImageFromLibrary = async () => {
     try {
-      // exif = true to get metadata of image
-      const result = await ImagePicker.launchImageLibraryAsync({
+      // Ask the user for the permission to access the media library
+      const permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (permissionResult.granted === false) {
+        alert("You've refused to allow this appp to access your photos!");
+        return;
+      }
+      let selectedImage = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsMultipleSelection: true,
-        selectionLimit: 2,
-        base64: true,
+        exif: true,
+        allowsEditing: true,
+      });
+      if (!selectedImage.cancelled) {
+        setImage(selectedImage);
+        setVisible(false);
+        navigation.navigate("History");
+      }
+    } catch (error) {
+      console.error("selectImageFromLibrary", error);
+      setImage();
+    }
+  };
+
+  const captureImage = async () => {
+    try {
+      const permissionResult =
+        await ImagePicker.requestCameraPermissionsAsync();
+
+      if (permissionResult.granted === false) {
+        alert("You've refused to allow this appp to access your camera!");
+        return;
+      }
+      let selectedImage = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         exif: true,
       });
-      if (!result.cancelled) {
-        const imageArray = result.selected.filter((img) => !img.cancelled);
-        setImages(imageArray);
+      console.log(selectedImage);
+      if (!selectedImage.cancelled) {
+        setImage(selectedImage);
+        setVisible(false);
+        navigation.navigate("History");
       }
     } catch (error) {
-      console.error(error);
-      setImages([]);
+      console.error("captureImage", error);
     }
   };
-
-  const onImagesSelected = async () => {
-    try {
-      const data = {
-        images: images.map((img) => {
-          return img.base64;
-        }),
-      };
-      console.log(data);
-      const response = await publicAxios.post("/image", data);
-      if (response.status === 200) {
-        console.log("SUCCESS!");
-        const { filenames } = response.data;
-        console.log(filenames);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useFocusEffect(React.useCallback(() => {}, [images]));
 
   return (
-    <SafeAreaView>
-      <ScrollView contentContainerStyle={screenStyles.container}>
-        <Text>Home Screen!</Text>
-        <StatusBar style="auto" />
-        <Button mode="contained" onPress={selectImages}>
-          Pick an image from camera roll
-        </Button>
-        {images.length > 0 && (
-          <>
-            {images.map((img, idx) => (
-              <Image
-                key={idx}
-                source={img.uri}
-                style={{ margin: 20, width: 200, height: 200 }}
-              />
-            ))}
-            <Button mode="contained" onPress={() => setImages([])}>
-              Clear Selection
+    <SafeAreaView style={style.container}>
+      <Card>
+        <Card.Title
+          title="Star Tracker"
+          titleVariant="titleLarge"
+          subtitle="Tool for detecting stars in images"
+          subtitleVariant="titleMedium"
+        />
+        <Card.Content>
+          <Paragraph>
+            This tool returns an image of the sky based on your location. It
+            marks planets, stars, and constellations.
+          </Paragraph>
+        </Card.Content>
+        <Card.Cover style={{ margin: 10 }} source={MilkyWay} />
+        <Card.Actions style={{ alignSelf: "center" }}>
+          <Button mode="contained" onPress={showDialog}>
+            Start Tracking!
+          </Button>
+        </Card.Actions>
+      </Card>
+
+      <Portal>
+        <Dialog
+          visible={isVisible}
+          onDismiss={hideDialog}
+          style={{ alignItems: "center" }}>
+          <Dialog.Icon icon="star" />
+          <Dialog.Title>Select Image</Dialog.Title>
+          <Dialog.Actions style={{ flexDirection: "column" }}>
+            <Button
+              mode="contained"
+              onPress={captureImage}
+              style={{ marginBottom: 10 }}>
+              Capture new image
             </Button>
             <Button
               mode="contained"
-              onPress={() =>
-                onImagesSelected()
-                  .then()
-                  .catch((e) => console.error(e))
-              }>
-              Apply Selection
+              onPress={selectImageFromLibrary}
+              style={{ marginBottom: 10 }}>
+              Choose from existing
             </Button>
-          </>
-        )}
-      </ScrollView>
+            <Button onPress={hideDialog}>Cancel</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+      <StatusBar style="auto" />
     </SafeAreaView>
   );
 };
