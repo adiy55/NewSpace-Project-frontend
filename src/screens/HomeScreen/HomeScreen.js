@@ -1,27 +1,20 @@
 import React, { useContext, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { ScrollView, View, SafeAreaView } from "react-native";
+import { ScrollView, SafeAreaView } from "react-native";
 import { style } from "../../styles";
 import * as ImagePicker from "expo-image-picker";
-import {
-  Appbar,
-  Button,
-  Card,
-  Dialog,
-  Paragraph,
-  Portal,
-} from "react-native-paper";
+import { Button, Card, Dialog, Paragraph, Portal } from "react-native-paper";
 import { useFocusEffect } from "@react-navigation/native";
-import { AxiosContext } from "../../context/AxiosContext";
 import MilkyWay from "../../../assets/MilkyWay.jpg";
 
+/* 
+Useful example on how to handle permissions for camera and media
+https://www.kindacode.com/article/image-picker-in-react-native/
+*/
 const HomeScreen = ({ navigation }) => {
-  const { publicAxios } = useContext(AxiosContext);
   const [image, setImage] = useState();
   const [isVisible, setVisible] = useState(false);
   useFocusEffect(React.useCallback(() => {}, []));
-
-  // const cameraRollPermissions = Permissions.
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
