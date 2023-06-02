@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 // Import Screens
 import HomeScreen from "../screens/HomeScreen";
 import HistoryScreen from "../screens/HistoryScreen";
+import ResultsScreen from "../screens/ResultsScreen";
 
 // Home Screen Stack
 const CustomNavigationBar = ({ navigation, route, options, back }) => {
@@ -24,7 +25,7 @@ const HomeScreenStack = () => {
       initialRouteName="Home"
       screenOptions={{ header: (props) => <CustomNavigationBar {...props} /> }}>
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="History" component={HistoryScreen} />
+      <Stack.Screen name="Results" component={ResultsScreen} />
     </Stack.Navigator>
   );
 };

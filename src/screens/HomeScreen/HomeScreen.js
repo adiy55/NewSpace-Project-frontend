@@ -39,12 +39,12 @@ const HomeScreen = ({ navigation }) => {
       let selectedImage = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         exif: true,
-        allowsEditing: true,
+        base64: true,
       });
       if (!selectedImage.cancelled) {
         setImage(selectedImage);
         setVisible(false);
-        navigation.navigate("History");
+        navigation.navigate("Results", { image: image });
       }
     } catch (error) {
       console.error("selectImageFromLibrary", error);
@@ -64,12 +64,12 @@ const HomeScreen = ({ navigation }) => {
       let selectedImage = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         exif: true,
+        base64: true,
       });
-      console.log(selectedImage);
       if (!selectedImage.cancelled) {
         setImage(selectedImage);
         setVisible(false);
-        navigation.navigate("History");
+        navigation.navigate("Results", { image: image });
       }
     } catch (error) {
       console.error("captureImage", error);
