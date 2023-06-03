@@ -5,12 +5,12 @@ import { AxiosProvider } from "./src/context/AxiosContext";
 
 export default function App() {
   return (
-    <PaperProvider>
-      <AxiosProvider>
+    <AxiosProvider>
+      <PaperProvider>
         <NavigationContainer>
           <Navigator />
         </NavigationContainer>
-      </AxiosProvider>
-    </PaperProvider>
+      </PaperProvider>
+    </AxiosProvider>
   );
 }

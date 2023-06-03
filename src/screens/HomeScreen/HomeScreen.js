@@ -12,7 +12,6 @@ Useful example on how to handle permissions for camera and media
 https://www.kindacode.com/article/image-picker-in-react-native/
 */
 const HomeScreen = ({ navigation }) => {
-  const [image, setImage] = useState();
   const [isVisible, setVisible] = useState(false);
   useFocusEffect(React.useCallback(() => {}, []));
 
@@ -35,13 +34,11 @@ const HomeScreen = ({ navigation }) => {
         base64: true,
       });
       if (!selectedImage.cancelled) {
-        setImage(selectedImage);
         setVisible(false);
-        navigation.navigate("Results", { image: image });
+        navigation.navigate("Results", { image: selectedImage });
       }
     } catch (error) {
       console.error("selectImageFromLibrary", error);
-      setImage();
     }
   };
 
@@ -60,9 +57,8 @@ const HomeScreen = ({ navigation }) => {
         base64: true,
       });
       if (!selectedImage.cancelled) {
-        setImage(selectedImage);
         setVisible(false);
-        navigation.navigate("Results", { image: image });
+        navigation.navigate("Results", { image: selectedImage });
       }
     } catch (error) {
       console.error("captureImage", error);
@@ -84,8 +80,8 @@ const HomeScreen = ({ navigation }) => {
             marks planets, stars, and constellations.
           </Paragraph>
         </Card.Content>
-        <Card.Cover style={{ margin: 10 }} source={MilkyWay} />
-        <Card.Actions style={{ alignSelf: "center" }}>
+        <Card.Cover style={style.cardCover} source={MilkyWay} />
+        <Card.Actions style={style.cardActions}>
           <Button mode="contained" onPress={showDialog}>
             Start Tracking!
           </Button>
@@ -96,27 +92,26 @@ const HomeScreen = ({ navigation }) => {
         <Dialog
           visible={isVisible}
           onDismiss={hideDialog}
-          style={{ alignItems: "center" }}>
+          style={style.dialogContainer}>
           <Dialog.Icon icon="star" />
           <Dialog.Title>Select Image</Dialog.Title>
-          <Dialog.Actions style={{ flexDirection: "column" }}>
+          <Dialog.Actions style={style.dialogActions}>
             <Button
               mode="contained"
               onPress={captureImage}
-              style={{ marginBottom: 10 }}>
+              style={style.iconOrButton}>
               Capture new image
             </Button>
             <Button
               mode="contained"
               onPress={selectImageFromLibrary}
-              style={{ marginBottom: 10 }}>
+              style={style.iconOrButton}>
               Choose from existing
             </Button>
             <Button onPress={hideDialog}>Cancel</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
-      <StatusBar style="auto" />
     </SafeAreaView>
   );
 };
