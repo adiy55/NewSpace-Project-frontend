@@ -1,9 +1,9 @@
-import { View, Image, Dimensions } from "react-native";
-import { ActivityIndicator, Avatar, Text } from "react-native-paper";
+import { View, Dimensions } from "react-native";
+import { Avatar, Text } from "react-native-paper";
 import React, { useContext, useState } from "react";
 import { style } from "../../styles";
 import { AxiosContext } from "../../context/AxiosContext";
-import { useFocusEffect } from "@react-navigation/native";
+import { ImageZoom } from "@likashefqet/react-native-image-zoom";
 
 const isPayloadValid = (payloadDict) => {
   let isValid = true;
@@ -75,11 +75,12 @@ const ResultsScreen = ({ route, navigation }) => {
       </View>
     );
   } else {
+    const imageUri = `data:image/jpeg;base64,${starsImage}`;
     return (
       <View style={style.container}>
         {starsImage && (
-          <Image
-            source={{ uri: `data:image/jpeg;base64,${starsImage}` }}
+          <ImageZoom
+            source={{ uri: imageUri }}
             style={{ width: width, height: height }}
             resizeMode="contain"
           />

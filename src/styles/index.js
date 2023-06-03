@@ -6,5 +6,19 @@ export const style = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
+  iconOrButton: {
+    marginBottom: 10,
+  },
+  cardCover: {
+    margin: 10,
+  },
+  cardActions: {
+    alignSelf: "center",
+  },
+  dialogContainer: {
+    alignItems: "center",
+  },
+  dialogActions: {
+    flexDirection: "column",
+  },
 });
