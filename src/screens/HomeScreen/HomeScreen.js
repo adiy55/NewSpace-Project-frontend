@@ -1,5 +1,4 @@
-import React, { useContext, useState } from "react";
-import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
 import { ScrollView, SafeAreaView } from "react-native";
 import { style } from "../../styles";
 import * as ImagePicker from "expo-image-picker";
@@ -66,52 +65,54 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={style.container}>
-      <Card>
-        <Card.Title
-          title="Star Tracker"
-          titleVariant="titleLarge"
-          subtitle="Tool for detecting stars in images"
-          subtitleVariant="titleMedium"
-        />
-        <Card.Content>
-          <Paragraph>
-            This tool returns an image of the sky based on your location. It
-            marks planets, stars, and constellations.
-          </Paragraph>
-        </Card.Content>
-        <Card.Cover style={style.cardCover} source={MilkyWay} />
-        <Card.Actions style={style.cardActions}>
-          <Button mode="contained" onPress={showDialog}>
-            Start Tracking!
-          </Button>
-        </Card.Actions>
-      </Card>
+    <SafeAreaView style={{ ...style.container, marginTop: 20 }}>
+      <ScrollView>
+        <Card>
+          <Card.Title
+            title="Star Tracker"
+            titleVariant="titleLarge"
+            subtitle="Tool for detecting stars in images"
+            subtitleVariant="titleMedium"
+          />
+          <Card.Content>
+            <Paragraph>
+              This tool returns an image of the sky based on your location. It
+              marks planets, stars, and constellations.
+            </Paragraph>
+          </Card.Content>
+          <Card.Cover style={style.cardCover} source={MilkyWay} />
+          <Card.Actions style={style.cardActions}>
+            <Button mode="contained" onPress={showDialog}>
+              Start Tracking!
+            </Button>
+          </Card.Actions>
+        </Card>
 
-      <Portal>
-        <Dialog
-          visible={isVisible}
-          onDismiss={hideDialog}
-          style={style.dialogContainer}>
-          <Dialog.Icon icon="star" />
-          <Dialog.Title>Select Image</Dialog.Title>
-          <Dialog.Actions style={style.dialogActions}>
-            <Button
-              mode="contained"
-              onPress={captureImage}
-              style={style.iconOrButton}>
-              Capture new image
-            </Button>
-            <Button
-              mode="contained"
-              onPress={selectImageFromLibrary}
-              style={style.iconOrButton}>
-              Choose from existing
-            </Button>
-            <Button onPress={hideDialog}>Cancel</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+        <Portal>
+          <Dialog
+            visible={isVisible}
+            onDismiss={hideDialog}
+            style={style.dialogContainer}>
+            <Dialog.Icon icon="star" />
+            <Dialog.Title>Select Image</Dialog.Title>
+            <Dialog.Actions style={style.dialogActions}>
+              <Button
+                mode="contained"
+                onPress={captureImage}
+                style={style.iconOrButton}>
+                Capture new image
+              </Button>
+              <Button
+                mode="contained"
+                onPress={selectImageFromLibrary}
+                style={style.iconOrButton}>
+                Choose from existing
+              </Button>
+              <Button onPress={hideDialog}>Cancel</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+      </ScrollView>
     </SafeAreaView>
   );
 };
