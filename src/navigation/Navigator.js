@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BottomNavigation, Appbar } from "react-native-paper";
+import { BottomNavigation, Appbar, useTheme } from "react-native-paper";
 import { getHeaderTitle } from "@react-navigation/elements";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -18,12 +18,17 @@ const CustomNavigationBar = ({ navigation, route, options, back }) => {
     </Appbar.Header>
   );
 };
-const Stack = createStackNavigator();
+
 const HomeScreenStack = () => {
+  const Stack = createStackNavigator();
+  const theme = useTheme();
   return (
     <Stack.Navigator
       initialRouteName="Home"
-      screenOptions={{ header: (props) => <CustomNavigationBar {...props} /> }}>
+      screenOptions={{
+        cardStyle: { backgroundColor: theme.colors.background },
+        header: (props) => <CustomNavigationBar {...props} />,
+      }}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Results" component={ResultsScreen} />
     </Stack.Navigator>

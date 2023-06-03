@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { ScrollView, SafeAreaView } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { style } from "../../styles";
 import * as ImagePicker from "expo-image-picker";
+import * as Location from "expo-location";
 import { Button, Card, Dialog, Paragraph, Portal } from "react-native-paper";
 import { useFocusEffect } from "@react-navigation/native";
 import MilkyWay from "../../../assets/MilkyWay.jpg";
@@ -34,7 +36,8 @@ const HomeScreen = ({ navigation }) => {
       });
       if (!selectedImage.cancelled) {
         setVisible(false);
-        navigation.navigate("Results", { image: selectedImage });
+        console.log(selectedImage?.exif);
+        navigation.navigate("Results", { imageMetadata: selectedImage?.exif });
       }
     } catch (error) {
       console.error("selectImageFromLibrary", error);
@@ -43,6 +46,7 @@ const HomeScreen = ({ navigation }) => {
 
   const captureImage = async () => {
     try {
+      // Get permissions from user
       const permissionResult =
         await ImagePicker.requestCameraPermissionsAsync();
 
@@ -50,14 +54,28 @@ const HomeScreen = ({ navigation }) => {
         alert("You've refused to allow this appp to access your camera!");
         return;
       }
+      let locationPermission =
+        await Location.requestForegroundPermissionsAsync();
+      if (locationPermission.granted === false) {
+        alert("Permission to access location was denied!");
+        return;
+      }
+      // Got permissions - can open camera!
       let selectedImage = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         exif: true,
         base64: true,
       });
       if (!selectedImage.cancelled) {
+        // Image was taken, get location
+        let location = await Location.getCurrentPositionAsync();
         setVisible(false);
-        navigation.navigate("Results", { image: selectedImage });
+        const imageMetadata = {
+          ...selectedImage?.exif,
+          longitude: location.coords.longitude,
+          latitude: location.coords.latitude,
+        };
+        navigation.navigate("Results", { imageMetadata });
       }
     } catch (error) {
       console.error("captureImage", error);
@@ -67,6 +85,8 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ ...style.container, marginTop: 20 }}>
       <ScrollView>
+        <StatusBar style="auto" />
+
         <Card>
           <Card.Title
             title="Star Tracker"
@@ -76,7 +96,7 @@ const HomeScreen = ({ navigation }) => {
           />
           <Card.Content>
             <Paragraph>
-              This tool returns an image of the sky based on your location. It
+              This tool computes an image of the sky based on your location. It
               marks planets, stars, and constellations.
             </Paragraph>
           </Card.Content>

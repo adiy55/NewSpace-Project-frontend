@@ -3,6 +3,7 @@ import { Avatar, Button, Text } from "react-native-paper";
 import React, { useContext, useState } from "react";
 import { style } from "../../styles";
 import { AxiosContext } from "../../context/AxiosContext";
+import { StatusBar } from "expo-status-bar";
 import { ImageZoom } from "@likashefqet/react-native-image-zoom";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
@@ -32,13 +33,13 @@ const ResultsScreen = ({ route, navigation }) => {
   const getStarsImage = async () => {
     try {
       // Get payload to send
-      const { image } = route.params;
-      const imageMetadata = image?.exif;
+      const { imageMetadata } = route.params;
+      console.log(imageMetadata);
       const payload = {
         fov: 60,
         datetime_str: imageMetadata?.DateTimeOriginal,
-        latitude: imageMetadata?.GPSLatitude,
-        longitude: imageMetadata?.GPSLongitude,
+        latitude: imageMetadata?.GPSLatitude || imageMetadata?.latitude,
+        longitude: imageMetadata?.GPSLongitude || imageMetadata?.longitude,
       };
       console.log(payload);
       // Check if payload data is complete
@@ -90,6 +91,7 @@ const ResultsScreen = ({ route, navigation }) => {
       });
     return (
       <SafeAreaView style={style.container}>
+        <StatusBar style="auto" />
         <Avatar.Icon icon="autorenew" style={style.iconOrButton} />
         <Text>Processing image, this may take a few moments...</Text>
       </SafeAreaView>
@@ -98,6 +100,7 @@ const ResultsScreen = ({ route, navigation }) => {
     console.log("HERE2!");
     return (
       <SafeAreaView style={style.container}>
+        <StatusBar style="auto" />
         <Avatar.Icon icon="exclamation" style={style.iconOrButton} />
         <Text>Could not process image!</Text>
       </SafeAreaView>
@@ -107,6 +110,7 @@ const ResultsScreen = ({ route, navigation }) => {
     const imageUri = `data:image/jpeg;base64,${starsImage}`;
     return (
       <SafeAreaView style={{ flex: 1, width: "100%", height: "100%" }}>
+        <StatusBar style="auto" />
         {starsImage && (
           <ImageZoom
             source={{ uri: imageUri }}

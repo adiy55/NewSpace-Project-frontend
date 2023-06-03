@@ -8,12 +8,14 @@ export const style = StyleSheet.create({
   },
   iconOrButton: {
     marginBottom: 10,
+    textAlign: "center",
   },
   cardCover: {
     margin: 10,
   },
   cardActions: {
     alignSelf: "center",
+    marginBottom: 10,
   },
   dialogContainer: {
     alignItems: "center",
