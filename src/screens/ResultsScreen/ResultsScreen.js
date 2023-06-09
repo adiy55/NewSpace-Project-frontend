@@ -40,6 +40,9 @@ const ResultsScreen = ({ route, navigation }) => {
         datetime_str: imageMetadata?.DateTimeOriginal,
         latitude: imageMetadata?.GPSLatitude || imageMetadata?.latitude,
         longitude: imageMetadata?.GPSLongitude || imageMetadata?.longitude,
+        gps_img_direction:
+          imageMetadata?.GPSImgDirection || imageMetadata?.gps_img_direction,
+          altitude: imageMetadata?.GPSAltitude || imageMetadata?.altitude,
       };
       console.log(payload);
       // Check if payload data is complete

@@ -68,12 +68,17 @@ const HomeScreen = ({ navigation }) => {
       });
       if (!selectedImage.cancelled) {
         // Image was taken, get location
+        let imgDirection = await Location.getHeadingAsync();
         let location = await Location.getCurrentPositionAsync();
+        console.log(location);
+        console.log("HERE", imgDirection);
         setVisible(false);
         const imageMetadata = {
           ...selectedImage?.exif,
           longitude: location.coords.longitude,
           latitude: location.coords.latitude,
+          gps_img_direction: imgDirection.trueHeading,
+          altitude: location.coords.altitude,
         };
         navigation.navigate("Results", { imageMetadata });
       }
