@@ -33,4 +33,13 @@ export const style = StyleSheet.create({
     alignSelf: "center",
     alignContent: "space-between",
   },
+  resultsContainer: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
+  queryContainer: {
+    flex: 1,
+    alignContent: "center",
+  },
 });

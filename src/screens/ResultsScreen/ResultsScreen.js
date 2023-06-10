@@ -129,7 +129,7 @@ const ResultsScreen = ({ route, navigation }) => {
   } else {
     const imageUri = `data:image/jpeg;base64,${starsImage}`;
     return (
-      <SafeAreaView style={{ flex: 1, width: "100%", height: "100%" }}>
+      <SafeAreaView style={style.resultsContainer}>
         <StatusBar style="auto" />
         <Banner
           visible={visible}

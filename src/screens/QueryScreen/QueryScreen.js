@@ -50,7 +50,7 @@ const QueryScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, alignContent: "center" }}>
+    <SafeAreaView style={style.queryContainer}>
       <StatusBar style="auto" />
       <Searchbar
         style={style.searchBar}
