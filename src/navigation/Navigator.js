@@ -5,8 +5,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 // Import Screens
 import HomeScreen from "../screens/HomeScreen";
-import HistoryScreen from "../screens/HistoryScreen";
 import ResultsScreen from "../screens/ResultsScreen";
+import QueryScreen from "../screens/QueryScreen";
 
 // Home Screen Stack
 const CustomNavigationBar = ({ navigation, route, options, back }) => {
@@ -31,13 +31,13 @@ const HomeScreenStack = () => {
       }}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Results" component={ResultsScreen} />
+      <Stack.Screen name="Query" component={QueryScreen} />
     </Stack.Navigator>
   );
 };
 
 // Save routes to screens
 const HomeRoute = HomeScreenStack;
-const HistoryRoute = HistoryScreen;
 
 // Bottom Navigation
 const BottomNavigationTabs = () => {
@@ -46,19 +46,12 @@ const BottomNavigationTabs = () => {
     {
       key: "home",
       title: "Home",
-      focusedIcon: "home",
-      unfocusedIcon: "home-outline",
-    },
-    {
-      key: "history",
-      title: "History",
-      focusedIcon: "history",
+      focusedIcon: "star",
     },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
     home: HomeRoute,
-    history: HistoryRoute,
   });
 
   return (

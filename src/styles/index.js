@@ -13,6 +13,9 @@ export const style = StyleSheet.create({
   cardCover: {
     margin: 10,
   },
+  cardContainer: {
+    marginBottom: 20,
+  },
   cardActions: {
     alignSelf: "center",
     marginBottom: 10,
@@ -22,5 +25,8 @@ export const style = StyleSheet.create({
   },
   dialogActions: {
     flexDirection: "column",
+  },
+  searchBar: {
+    margin: 10,
   },
 });

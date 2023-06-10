@@ -21,7 +21,7 @@ const HomeScreen = ({ navigation }) => {
     exif: true,
     base64: true,
   };
-  
+
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
@@ -86,7 +86,7 @@ const HomeScreen = ({ navigation }) => {
       <ScrollView>
         <StatusBar style="auto" />
 
-        <Card>
+        <Card style={style.cardContainer}>
           <Card.Title
             title="Star Tracker"
             titleVariant="titleLarge"
@@ -133,6 +133,23 @@ const HomeScreen = ({ navigation }) => {
             </Dialog.Actions>
           </Dialog>
         </Portal>
+
+        <Card style={style.cardContainer}>
+          <Card.Title
+            title="Search Stars"
+            titleVariant="titleLarge"
+            subtitle="Tool for querying stars in a database"
+            subtitleVariant="titleMedium"
+          />
+          <Card.Actions style={style.cardActions}>
+            <Button
+              mode="text"
+              icon="magnify"
+              onPress={() => navigation.navigate("Query")}>
+              Start Searching!
+            </Button>
+          </Card.Actions>
+        </Card>
       </ScrollView>
     </SafeAreaView>
   );
