@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, SafeAreaView } from "react-native";
+import { ScrollView, SafeAreaView, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { style } from "../../styles";
 import * as ImagePicker from "expo-image-picker";
@@ -16,6 +16,12 @@ const HomeScreen = ({ navigation }) => {
   const [isVisible, setVisible] = useState(false);
   useFocusEffect(React.useCallback(() => {}, []));
 
+  let mediaOptions = {
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    exif: true,
+    base64: true,
+  };
+  
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
@@ -29,11 +35,9 @@ const HomeScreen = ({ navigation }) => {
         alert("You've refused to allow this appp to access your photos!");
         return;
       }
-      let selectedImage = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        exif: true,
-        base64: true,
-      });
+      let selectedImage = await ImagePicker.launchImageLibraryAsync(
+        mediaOptions
+      );
       if (!selectedImage.cancelled) {
         setVisible(false);
         console.log(selectedImage?.exif);
@@ -64,11 +68,7 @@ const HomeScreen = ({ navigation }) => {
         return;
       }
       // Got permissions - can open camera!
-      let selectedImage = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        exif: true,
-        base64: true,
-      });
+      let selectedImage = await ImagePicker.launchCameraAsync(mediaOptions);
       if (!selectedImage.cancelled) {
         setVisible(false);
         navigation.navigate("Results", {
@@ -115,12 +115,14 @@ const HomeScreen = ({ navigation }) => {
             <Dialog.Icon icon="star" />
             <Dialog.Title>Select Image</Dialog.Title>
             <Dialog.Actions style={style.dialogActions}>
-              <Button
-                mode="contained"
-                onPress={captureImage}
-                style={style.iconOrButton}>
-                Capture new image
-              </Button>
+              {Platform.OS !== "web" && (
+                <Button
+                  mode="contained"
+                  onPress={captureImage}
+                  style={style.iconOrButton}>
+                  Capture new image
+                </Button>
+              )}
               <Button
                 mode="contained"
                 onPress={selectImageFromLibrary}

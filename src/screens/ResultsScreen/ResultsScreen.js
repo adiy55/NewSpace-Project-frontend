@@ -34,6 +34,7 @@ const ResultsScreen = ({ route, navigation }) => {
   const { imageMetadata, isFromCamera } = route.params;
   let metadata = { ...imageMetadata };
   console.log(metadata);
+  
   const getStarsImage = async () => {
     try {
       if (isFromCamera) {
