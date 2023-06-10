@@ -68,8 +68,15 @@ const QueryScreen = () => {
         You must enter a name!
       </HelperText>
       {isDictEmpty(responseData) === false && (
-        <ScrollView>
-          <Text>{JSON.stringify(responseData, null, 2)}</Text>
+        <ScrollView style={{ marginHorizontal: 20 }}>
+          {Object.entries(responseData).map((item, index) => {
+            return (
+              <Text
+                variant="bodyLarge"
+                style={{ fontWeight: "bold" }}
+                key={index}>{`${item[0]}: ${item[1]}`}</Text>
+            );
+          })}
         </ScrollView>
       )}
     </SafeAreaView>
