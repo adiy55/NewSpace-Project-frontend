@@ -1,5 +1,5 @@
-import { SafeAreaView, Dimensions } from "react-native";
-import { Avatar, Button, Text } from "react-native-paper";
+import { SafeAreaView } from "react-native";
+import { Avatar, Button, Text, Banner } from "react-native-paper";
 import React, { useContext, useState } from "react";
 import { style } from "../../styles";
 import { AxiosContext } from "../../context/AxiosContext";
@@ -7,6 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import { ImageZoom } from "@likashefqet/react-native-image-zoom";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
+import * as Location from "expo-location";
 
 // ImageZoom: https://www.npmjs.com/package/@likashefqet/react-native-image-zoom
 
@@ -25,24 +26,38 @@ const isPayloadValid = (payloadDict) => {
 
 const ResultsScreen = ({ route, navigation }) => {
   const { publicAxios } = useContext(AxiosContext);
-  const { width, height } = Dimensions.get("window");
 
   const [isLoading, setLoading] = useState(true);
   const [starsImage, setStarsImage] = useState(null);
-
+  const [visible, setVisible] = useState(false);
+  // Get payload to send
+  const { imageMetadata, isFromCamera } = route.params;
+  let metadata = { ...imageMetadata };
+  console.log(metadata);
   const getStarsImage = async () => {
     try {
-      // Get payload to send
-      const { imageMetadata } = route.params;
-      console.log(imageMetadata);
+      if (isFromCamera) {
+        // Get location data
+        let imgDirection = await Location.getHeadingAsync();
+        let location = await Location.getCurrentPositionAsync();
+        console.log(location);
+        console.log("HERE", imgDirection);
+        metadata = {
+          ...metadata,
+          longitude: location.coords.longitude,
+          latitude: location.coords.latitude,
+          gps_img_direction: imgDirection.trueHeading,
+          altitude: location.coords.altitude,
+        };
+      }
       const payload = {
         fov: 60,
-        datetime_str: imageMetadata?.DateTimeOriginal,
-        latitude: imageMetadata?.GPSLatitude || imageMetadata?.latitude,
-        longitude: imageMetadata?.GPSLongitude || imageMetadata?.longitude,
+        datetime_str: metadata?.DateTimeOriginal,
+        latitude: metadata?.GPSLatitude || metadata?.latitude,
+        longitude: metadata?.GPSLongitude || metadata?.longitude,
         gps_img_direction:
-          imageMetadata?.GPSImgDirection || imageMetadata?.gps_img_direction,
-          altitude: imageMetadata?.GPSAltitude || imageMetadata?.altitude,
+          metadata?.GPSImgDirection || metadata?.gps_img_direction,
+        altitude: metadata?.GPSAltitude || metadata?.altitude,
       };
       console.log(payload);
       // Check if payload data is complete
@@ -114,6 +129,11 @@ const ResultsScreen = ({ route, navigation }) => {
     return (
       <SafeAreaView style={{ flex: 1, width: "100%", height: "100%" }}>
         <StatusBar style="auto" />
+        <Banner
+          visible={visible}
+          actions={[{ label: "OK", onPress: () => setVisible(false) }]}>
+          Image saved successfully!
+        </Banner>
         {starsImage && (
           <ImageZoom
             source={{ uri: imageUri }}
@@ -124,7 +144,7 @@ const ResultsScreen = ({ route, navigation }) => {
         <Button
           onPress={() =>
             saveImageToLibrary(starsImage)
-              .then()
+              .then(() => setVisible(true))
               .catch((e) => console.error(e))
           }>
           Save Image
