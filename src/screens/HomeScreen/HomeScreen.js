@@ -95,8 +95,7 @@ const HomeScreen = ({ navigation }) => {
           />
           <Card.Content>
             <Paragraph>
-              This tool computes an image of the sky based on your location. It
-              marks planets, stars, and constellations.
+              This tool identifies and highlihts stars and planets.
             </Paragraph>
           </Card.Content>
           <Card.Cover style={style.cardCover} source={MilkyWay} />
