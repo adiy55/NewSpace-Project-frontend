@@ -1,4 +1,4 @@
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, Linking, View } from "react-native";
 import { Avatar, Button, Text, Banner } from "react-native-paper";
 import React, { useContext, useState } from "react";
 import { style } from "../../styles";
@@ -30,10 +30,11 @@ const ResultsScreen = ({ route, navigation }) => {
   const [isLoading, setLoading] = useState(true);
   const [starsImage, setStarsImage] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [urls, setUrls] = useState([]);
   // Get payload to send
   const { imageMetadata, isFromCamera } = route.params;
   let metadata = { ...imageMetadata };
-  console.log(metadata);
+  // console.log(metadata);
 
   const getStarsImage = async () => {
     try {
@@ -60,7 +61,7 @@ const ResultsScreen = ({ route, navigation }) => {
           metadata?.GPSImgDirection || metadata?.gps_img_direction,
         altitude: metadata?.GPSAltitude || metadata?.altitude,
       };
-      console.log(payload);
+      // console.log(payload);
       // Check if payload data is complete
       const isValid = isPayloadValid(payload);
       if (isValid) {
@@ -68,10 +69,10 @@ const ResultsScreen = ({ route, navigation }) => {
         const response = await publicAxios.post("/stars", payload);
         if (response.status === 200) {
           console.log("SUCCESS!");
-          const { encBase64 } = response.data;
-          return encBase64;
+          const { encBase64, stars_urls } = response.data;
+          return [encBase64, stars_urls];
         }
-        return null;
+        return [null, null];
       }
     } catch (error) {
       console.error(error);
@@ -98,16 +99,17 @@ const ResultsScreen = ({ route, navigation }) => {
 
   // Render proper component
   if (isLoading) {
-    console.log("HERE1!");
     getStarsImage()
-      .then((encodedImage) => {
+      .then(([encodedImage, urls]) => {
         setLoading(false);
         setStarsImage(encodedImage);
+        setUrls(urls);
       })
       .catch((e) => {
         console.error(e);
         setStarsImage(null);
         setLoading(false);
+        setUrls([]);
       });
     return (
       <SafeAreaView style={style.container}>
@@ -117,7 +119,6 @@ const ResultsScreen = ({ route, navigation }) => {
       </SafeAreaView>
     );
   } else if (isLoading === false && !starsImage) {
-    console.log("HERE2!");
     return (
       <SafeAreaView style={style.container}>
         <StatusBar style="auto" />
@@ -126,7 +127,6 @@ const ResultsScreen = ({ route, navigation }) => {
       </SafeAreaView>
     );
   } else {
-    console.log("HERE3!");
     const imageUri = `data:image/jpeg;base64,${starsImage}`;
     return (
       <SafeAreaView style={{ flex: 1, width: "100%", height: "100%" }}>
@@ -137,20 +137,43 @@ const ResultsScreen = ({ route, navigation }) => {
           Image saved successfully!
         </Banner>
         {starsImage && (
-          <ImageZoom
-            source={{ uri: imageUri }}
-            resizeMethod="auto"
-            resizeMode="contain"
-          />
+          <>
+            <ImageZoom
+              source={{ uri: imageUri }}
+              resizeMethod="auto"
+              resizeMode="contain"
+            />
+            <Button
+              onPress={() =>
+                saveImageToLibrary(starsImage)
+                  .then(() => setVisible(true))
+                  .catch((e) => console.error(e))
+              }>
+              Save Image
+            </Button>
+          </>
         )}
-        <Button
-          onPress={() =>
-            saveImageToLibrary(starsImage)
-              .then(() => setVisible(true))
-              .catch((e) => console.error(e))
-          }>
-          Save Image
-        </Button>
+        <View style={style.rowView}>
+          {urls &&
+            urls.map((obj, index) => {
+              const key = Object.keys(obj)[0];
+              const value = obj[key];
+              return (
+                <Button
+                  key={index}
+                  mode="contained"
+                  icon="magnify"
+                  style={style.iconOrButton}
+                  onPress={() =>
+                    Linking.openURL(`${value}`)
+                      .then()
+                      .catch((e) => console.error(e))
+                  }>
+                  {`${key}`}
+                </Button>
+              );
+            })}
+        </View>
       </SafeAreaView>
     );
   }

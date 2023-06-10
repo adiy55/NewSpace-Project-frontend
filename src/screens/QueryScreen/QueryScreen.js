@@ -40,7 +40,7 @@ const QueryScreen = () => {
         const response = await publicAxios.get(`/stars?name=${searchQuery}`);
         const { data } = response;
         const { content } = data;
-        console.log(content);
+        // console.log(content);
         setResponseData({ ...content });
       }
     } catch (error) {

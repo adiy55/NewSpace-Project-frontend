@@ -40,7 +40,7 @@ const HomeScreen = ({ navigation }) => {
       );
       if (!selectedImage.cancelled) {
         setVisible(false);
-        console.log(selectedImage?.exif);
+        // console.log(selectedImage?.exif);
         navigation.navigate("Results", {
           imageMetadata: selectedImage?.exif,
           isFromCamera: false,

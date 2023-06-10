@@ -29,4 +29,8 @@ export const style = StyleSheet.create({
   searchBar: {
     margin: 10,
   },
+  rowView: {
+    alignSelf: "center",
+    alignContent: "space-between",
+  },
 });
