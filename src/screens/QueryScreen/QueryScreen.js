@@ -1,32 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, ScrollView } from "react-native";
 import { style } from "../../styles";
-import { Searchbar } from "react-native-paper";
+import { HelperText, Searchbar, Text } from "react-native-paper";
+import { AxiosContext } from "../../context/AxiosContext";
+
+const isDictEmpty = (obj) => {
+  return Object.keys(obj).length === 0;
+};
+
+const isStringEmpty = (str) => {
+  return str.length === 0;
+};
 
 const QueryScreen = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const { publicAxios } = useContext(AxiosContext);
 
-  const onChangeSearch = (query) => setSearchQuery(query);
-  const getQuery = async () => {
-    try {
-      console.log("Send query to backend!");
-    } catch (error) {
-      console.error(error);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [responseData, setResponseData] = useState({});
+  const [visible, setVisible] = useState(false); // for helper text
+
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+    if (!isStringEmpty(searchQuery)) {
+      setVisible(false);
     }
   };
+
+  const clearQueryData = () => {
+    setSearchQuery("");
+    setResponseData({});
+  };
+
+  const getQuery = async () => {
+    try {
+      if (isStringEmpty(searchQuery)) {
+        setVisible(true);
+      } else {
+        const response = await publicAxios.get(`/stars?name=${searchQuery}`);
+        const { data } = response;
+        const { content } = data;
+        console.log(content);
+        setResponseData({ ...content });
+      }
+    } catch (error) {
+      console.error(error);
+      setResponseData({});
+    }
+  };
+
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <StatusBar style="auto" />
-        <Searchbar
-          style={style.searchBar}
-          placeholder="Search by Star Name"
-          onChangeText={onChangeSearch}
-          onIconPress={getQuery}
-          value={searchQuery}
-        />
-      </ScrollView>
+    <SafeAreaView style={{ flex: 1, alignContent: "center" }}>
+      <StatusBar style="auto" />
+      <Searchbar
+        style={style.searchBar}
+        placeholder="Search by Star Name"
+        onChangeText={onChangeSearch}
+        onIconPress={getQuery}
+        value={searchQuery}
+        onClearIconPress={clearQueryData}
+        onSubmitEditing={getQuery}
+      />
+      <HelperText
+        style={{ alignSelf: "center" }}
+        type="error"
+        visible={visible}>
+        You must enter a name!
+      </HelperText>
+      {isDictEmpty(responseData) === false && (
+        <ScrollView>
+          <Text>{JSON.stringify(responseData, null, 2)}</Text>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

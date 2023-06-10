@@ -34,7 +34,7 @@ const ResultsScreen = ({ route, navigation }) => {
   const { imageMetadata, isFromCamera } = route.params;
   let metadata = { ...imageMetadata };
   console.log(metadata);
-  
+
   const getStarsImage = async () => {
     try {
       if (isFromCamera) {
@@ -78,6 +78,7 @@ const ResultsScreen = ({ route, navigation }) => {
     }
   };
 
+  // https://stackoverflow.com/questions/61533273/convert-base64-to-png-and-save-in-the-device-react-native-expo
   const saveImageToLibrary = async (base64Image) => {
     try {
       const permission = await MediaLibrary.requestPermissionsAsync();
