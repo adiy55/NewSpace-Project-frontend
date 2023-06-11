@@ -56,7 +56,11 @@ Download [Expo Go for Android](https://play.google.com/store/apps/details?id=hos
 
 #### `Stellarium Scripting API:`
 
-<https://stellarium.org/doc/0.21.0/scripting_api.html>
+<https://stellarium.org/doc/head/remoteControlApi.html>
+
+<https://www.planetmaker.de/2018/11/scripting-stellarium/>
+
+<https://lauradurieux.medium.com/how-to-use-stellarium-http-api-f0942d2c8820>
 
 #### `PIL Documentation:`
 
