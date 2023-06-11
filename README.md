@@ -64,7 +64,7 @@ Download [Expo Go for Android](https://play.google.com/store/apps/details?id=hos
 
 #### `Angles calculations:`
 
-<https://https://chat.openai.com/>
+<https://chat.openai.com/>
 
 <p align="center">
   <img src="https://i0.wp.com/eos.org/wp-content/uploads/2022/09/scorpius-centaurus-ob-stellar-association.jpg?fit=1200%2C675&ssl=1" alt="Logo" width="1000" height="420" align="center">
